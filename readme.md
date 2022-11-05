@@ -1,6 +1,10 @@
 # GUI Builder
 
-Gui Builder is a free visual editor for Vaadin Flow.
+Gui Builder is a free visual editor. Currenly supports Vaadin Flow templates using Lit.
+
+The GUI Builder application can be found at [gui-builder.com](https://gui-builder.com) and some documentation for it at [gui-builder.com/docs](https://gui-builder.com/docs)
+
+Follow the author at twitter for the latest updates [@mjvesa](https://twitter.com/mjvesa)
 
 ## How to develop
 
