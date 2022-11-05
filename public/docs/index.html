@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GUI Builder documentation</title>
+    <style>
+      html {
+        background-color: #111;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        background-color: #222;
+        color: #eee;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        line-height: 1.5;
+      }
+
+      @media (min-aspect-ratio: 16/9) {
+        body {
+          margin-left: 25%;
+          margin-right: 25%;
+        }
+      }
+
+      code {
+        color: #afa;
+      }
+
+      a:visited {
+        color: green;
+      }
+      a {
+        color: #3f3;
+      }
+      img {
+        border: gray solid 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GUI Builder</h1>
+
+    <h2>Introduction</h2>
+    <p>
+      GUI Builder is an application for editing user interfaces visually. It
+      provides direct editing of components by dragging and dropping them on a
+      canvas and an outline representation of the element tree. Elements can be
+      selected and the properties of the selected elements can be modified as
+      strings in a table. For many elements and properties special custom
+      editors are provided with an editing experience suited for each component
+      or property set in question.
+    </p>
+    <p>
+      While the GUI Builder architecture has provisions for swapping out the
+      target framework and component set, currently only Vaadin is supported.
+    </p>
+    <p></p>
+    <h2>UI overview</h2>
+    <p>The UI consists of the following parts:</p>
+    <ul>
+      <li>
+        A header with button to rescan the components, selector for edited
+        component and a save button
+      </li>
+      <li>Outline is a tree representation of the component</li>
+      <li>Canvas where the components are rendered</li>
+      <li>
+        Inspector contains a table of properties and a space for custom editors
+        for the currently seleted component
+      </li>
+      <li>
+        Palette provides list of elements that can be dragged on the edited
+        component
+      </li>
+    </ul>
+    <img src="images/full_view.png" />
+
+    <h3>Outline</h3>
+    <p>
+      The outline provides a tree form view to the component. Sometimes it can
+      be easier and more precise to drag and drop elements in the outline vs.
+      using the canvas. Elements can be selected by clicking on them. When an
+      element is selected, a border is drawn around it and its children to
+      indicate that they have been selected. The inspector tab is also opened to
+      display the properties of the selected element.
+    </p>
+    <img src="images/outline_buttons.png" />
+
+    <h3>Inspector</h3>
+    <p>
+      The inpector is for modifying the properties of the selected component
+      (these are attributes in the case of Vaadin). There are two ways to edit
+      them: you can use a table of key value pairs, or custom editors that
+      target specific elements and property sets. For example, Vaadin Button has
+      its own editor and flexbox properties have their own editor that can be
+      used with any element. An empty key and value in the table is considered
+      to be non-existent, so to delete an attribute, clear out the row.
+    </p>
+    <img src="images/inspector_custom_editor.png" />
+    <p></p>
+    <h3>Palette</h3>
+    <p>
+      The palette is list of elements that can be dragged and dropped to the
+      outline or to the canvas. Components found in the project via scanning are
+      also present in the palette. There are two ways to add these to the
+      component: by dragging the name of the element to insert it as an element,
+      or by dragging the "expand" next to the element tag to expand the contents
+      of the component into the current one.
+    </p>
+    <img src="images/palette.png" />
+    <h2>Keyboard shortcuts</h2>
+    <p>
+      The supported keyboard shortcuts include the usual copy, cut, paste,
+      delete and undo/redo:
+    </p>
+    <ul>
+      <li>Ctrl+C copies the selected element</li>
+      <li>Ctrl+X cuts the selected element</li>
+      <li>Ctrl+V pastes what has been copied or cut last</li>
+      <li>Ctrl+Del deletes the selected element</li>
+      <li>Ctrl+Z undoes the latest change</li>
+      <li>
+        Ctrl+Y redoes the latest undone change, can be repeated until there are
+        no undone changes
+      </li>
+    </ul>
+    The keyboard shortcuts currently work only when the mouse is not on the
+    canvas, as the iframe swallows any keyboard events. This limitation will be
+    removed shortly.
+    <h2>Template formats</h2>
+    GUI Builder supports two different template formats for Vaadin: Lit
+    templates are the same that can be edited using Vaadin Designer and plain
+    Java templates consist of plain Java code that uses the Element API to
+    contruct the element tree.
+    <h3>Lit templates</h3>
+    <p>
+      Lit templates are Web Components written in a subset of Lit element
+      features. Namely expressions and nested templates are not supported. Many
+      templates from <a href="https://start.vaadin.com">start.vaadin.com</a> can
+      be edited, but some can't simply because the necessary data is only
+      available during runtime.
+    </p>
+
+    <h3>Java templates</h3>
+    <p>
+      Templates can be written in a subset of Java. The subset is equal to
+      expressive power to Lit templates, which means it can be used to build a
+      tree of components and set attributes on those components. Due to the
+      restrictive nature of the subset, it is very unlikely you would want to
+      edit existing components using it, but new ones can be created with
+      greater ease.
+    </p>
+    <p>
+      Instead of using the Component API, Java support uses the Element API
+      which allows creating arbitrary components instead of relying on what is
+      exposed in the Component API. This removes many inconsistencies that exist
+      between the Component API and the API that is available to those who use
+      vaadin components directly on the client side.
+    </p>
+    <p>
+      To use the Java support, special markers need to be inserted somewhere
+      into the Java component file that is to be edited with the GUI Builder:
+    </p>
+
+    <p>
+      <code>// GUI CONSTRUCTION BEGIN</code>
+    </p>
+    <p>
+      <code>// GUI CONSTRUCTION END</code>
+    </p>
+    <p>
+      Also the variable <code>root</code> should be available. That variable is
+      used as the root of the component tree, and new elements are placed into
+      it at the topmost level. Here is an example of the construction of simple
+      component in class <code>SimpleView</code>:
+    </p>
+
+    <pre><code>
+  public SimpleView() {
+    Element root = this.getElement();
+    Element someButton;
+    // GUI CONSTRUCTION BEGIN
+    Element verticalLayout = new Element("vaadin-vertical-layout");
+    root.appendChild(verticalLayout);
+    Element button = new Element("vaadin-button");
+    verticalLayout.appendChild(button);
+    button.setText("Click me");
+    button.setAttribute("theme","primary");
+    someButton = button;
+    // GUI CONSTRUCTION END
+  }
+  </code></pre>
+    <p>
+      To use an element outside the generated code, use the "Common properties"
+      editor and the "Variable name" field to give the element a variable name
+      where it is set in the generated code. It is up to you to provide a
+      variable by that name in the scope you choose.
+    </p>
+    <img src="images/expose_element.png" />
+  </body>
+</html>
