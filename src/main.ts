@@ -120,10 +120,8 @@ const getEditorTargetDocument = () => {
 /**
  * Gets the coordinates of the target on the screen, even if it is in an iframe
  *
- * @param {HTMLElement} target  target element
- * @returns
  */
-const getBcr = (target) => {
+const getBcr = (target:HTMLElement) => {
   if (!liveMode) {
     return target.getBoundingClientRect();
   }
