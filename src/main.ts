@@ -12,9 +12,9 @@ import Picker from "vanilla-picker";
 import * as Model from "./model";
 import { cssPropertyTypes } from "./css-proprety-types";
 import { cssProperties } from "./css-properties.js";
-import { enterSketchMode } from "./sketch-mode";
+import { enterSketchMode } from "./tools/sketch";
 import { ATIRToXML, XMLToATIR } from "./xml";
-import { generateCrudFromBean } from "./crud_generator.js";
+import { generateCrudFromBean } from "./tools/crudgen.js/index.js.js";
 
 import {
   ECAPI,
