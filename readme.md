@@ -8,6 +8,10 @@ Follow the author at twitter for the latest updates [@mjvesa](https://twitter.co
 
 ## How to develop
 
+You need a component module (comod), for example the  [Vaadin comod here](https://github.com/mjvesa/comod-vaadin) Build it and put the
+resulting file into public as `iframe_bundle.js`. Then you can build the project. It is sufficient to put the files in the public folder
+to some HTTPS capable server. HTTPS is needed for the local file access to work.
+
 Instructions nicked from rollup docs:
 
 `npm run build` builds the application to `public/bundle.js`, along with a sourcemap file for debugging.
