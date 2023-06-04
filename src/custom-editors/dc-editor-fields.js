@@ -62,6 +62,30 @@ export const createPropertySelect = (caption, options, listener) => {
   return tr;
 };
 
+export const createPropertyCheckboxes = (caption, options, listener) => {
+  const tr = document.createElement("tr");
+  const captionTd = document.createElement("td");
+  captionTd.textContent = caption;
+  tr.appendChild(captionTd);
+  const inputTd = document.createElement("td");
+  const input = document.createElement("input");
+  input.type="checkbox";
+  input.style.zIndex = "100000";
+  input.onmousedown = (event) => {
+    event.stopPropagation();
+  };
+  options.forEach((option) => {
+    const optionEl = document.createElement("option");
+    optionEl.textContent = option;
+    input.appendChild(optionEl);
+  });
+  input.oninput = listener;
+  inputTd.appendChild(input);
+  tr.appendChild(inputTd);
+  return tr;
+};
+
+
 export const fieldsFromProperties = (properties, table, CEAPI) => {
   properties.forEach((prop) => {
     const value = CEAPI.style[prop[0]];

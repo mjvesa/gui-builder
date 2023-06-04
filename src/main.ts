@@ -14,7 +14,7 @@ import { cssPropertyTypes } from "./css-proprety-types";
 import { cssProperties } from "./css-properties.js";
 import { enterSketchMode } from "./tools/sketch";
 import { ATIRToXML, XMLToATIR } from "./xml";
-import { generateCrudFromBean } from "./tools/crudgen.js/index.js.js";
+import { generateCrudFromBean } from "./tools/crudgen.js";
 
 import {
   ECAPI,
@@ -199,7 +199,7 @@ const startDragFromModel = (elementId) => {
   );
 };
 
-const showNewComponent = (newComponent) => {
+const  showNewComponent = (newComponent) => {
   componentStack.push(currentComponent);
   currentComponent = newComponent;
   showCurrentComponent();

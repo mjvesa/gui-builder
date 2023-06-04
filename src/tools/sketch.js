@@ -1,4 +1,4 @@
-import { brute } from "../brute";
+import { brute } from "./brute";
 
 let $;
 

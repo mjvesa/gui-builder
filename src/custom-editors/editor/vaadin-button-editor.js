@@ -34,6 +34,11 @@ const fn = (el, DCAPI) => {
   el.appendChild(table);
 };
 
+
+function sqrt(x) {
+  
+}
+
 export const vaadinButtonEditor = {
   name: "vaadin-button-editor",
   displayname: "Vaadin Button",
