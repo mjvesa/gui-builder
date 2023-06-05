@@ -8,19 +8,36 @@ import typescript from "@rollup/plugin-typescript";
 // `npm run dev` -> `production` is false
 const production = !process.env.ROLLUP_WATCH;
 
-export default {
-  input: "src/main.ts",
-  output: {
-    file: "public/bundle.js",
-    name: "bundle",
-    format: "iife", // immediately-invoked function expression — suitable for <script> tags
-    sourcemap: true,
+export default [
+  {
+    input: "src/main.ts",
+    output: {
+      file: "public/bundle.js",
+      name: "bundle",
+      format: "iife",
+      sourcemap: true,
+    },
+    plugins: [
+      typescript(),
+      css({ output: "public/bundle.css" }),
+      resolve(),
+      commonjs(),
+      production && terser({ compress: { drop_console: true } }),
+    ],
   },
-  plugins: [
-    typescript(),
-    css({ output: "public/bundle.css" }),
-    resolve(), // tells Rollup how to find date-fns in node_modules
-    commonjs(), // converts date-fns to ES modules
-    production && terser({ compress: { drop_console: true } }), // minify, but only in production
-  ],
-};
+  {
+    input: "src/comod/vaadin/main.js",
+    output: {
+      file: "public/iframe_bundle.js",
+      name: "iframe_bundle",
+      format: "iife",
+      sourcemap: true,
+    },
+    plugins: [
+      css({ output: "public/iframe_bundle.css" }),
+      resolve(),
+      commonjs(),
+      production && terser({ compress: { drop_console: true } }),
+    ],
+  },
+];

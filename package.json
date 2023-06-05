@@ -37,8 +37,7 @@
     ]
   },
   "dependencies": {
-    "@vaadin/vaadin-icon": "^23.0.4",
-    "@vaadin/vaadin-icons": "^23.0.4",
+    "@vaadin/vaadin-core": "^24.0.5",
     "codemirror": "^5.56.0",
     "electron": "^22.1.0",
     "query-selector-shadow-dom": "^1.0.0",
