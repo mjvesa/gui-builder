@@ -338,6 +338,12 @@ const createAndAppendChildElements = (rects) => {
       styles = rect.css_props;
     }
 
+    styles =
+      styles +
+      `position: absolute; left: ${rect.left}px; top: ${rect.top}px; width: ${
+        rect.right - rect.left
+      }px; height: ${rect.bottom - rect.top} px;`;
+
     if (
       tagName !== "grid-layout" &&
       tagName !== "vaadin-vertical-layout" &&

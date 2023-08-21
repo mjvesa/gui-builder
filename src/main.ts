@@ -121,7 +121,7 @@ const getEditorTargetDocument = () => {
  * Gets the coordinates of the target on the screen, even if it is in an iframe
  *
  */
-const getBcr = (target:HTMLElement) => {
+const getBcr = (target: HTMLElement) => {
   if (!liveMode) {
     return target.getBoundingClientRect();
   }
@@ -199,7 +199,7 @@ const startDragFromModel = (elementId) => {
   );
 };
 
-const  showNewComponent = (newComponent) => {
+const showNewComponent = (newComponent) => {
   componentStack.push(currentComponent);
   currentComponent = newComponent;
   showCurrentComponent();
@@ -894,14 +894,21 @@ const loadSelectedComponent = () => {
 
 const switchToSketchMode = () => {
   hideMarkers();
-  getPaperElement().style.display = "none";
+  //getPaperElement().style.display = "none";
   $("#xml-editor").style.display = "block";
-  enterSketchMode($("#xml-editor"), (component) => {
-    const newTree = currentComponent.tree.slice().concat(component);
-    $("#xml-editor").style.display = "none";
-    getPaperElement().style.display = "block";
-    showNewComponent({ ...currentComponent, tree: newTree });
-  });
+  $("#xml-editor").style.position = "absolute";
+  enterSketchMode(
+    $("#xml-editor"),
+    (component) => {
+      comodMessage({ command: "render", tree: component });
+    },
+    (component) => {
+      const newTree = currentComponent.tree.slice().concat(component);
+      $("#xml-editor").style.display = "none";
+      getPaperElement().style.display = "block";
+      showNewComponent({ ...currentComponent, tree: newTree });
+    }
+  );
 };
 
 const selectFirstComponent = () => {
