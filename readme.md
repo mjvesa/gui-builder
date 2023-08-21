@@ -1,6 +1,6 @@
 # GUI Builder
 
-Gui Builder is a free visual editor. Currenly supports Vaadin Flow templates using Lit. The following video contains a walkthrough of the UI of GUI Builder: 
+Gui Builder is a free visual editor. Currenly supports Vaadin Flow templates using Lit. The following video contains a walkthrough of the UI of GUI Builder:
 
 [![GUI Builder UI walkthrough](https://img.youtube.com/vi/iUE7JZXcfxs/0.jpg)](https://www.youtube.com/watch?v=iUE7JZXcfxs&t=1s)
 
@@ -10,9 +10,9 @@ Follow the author at twitter for the latest updates [@mjvesa](https://twitter.co
 
 ## How to develop
 
-You need a component module (comod), for example the  [Vaadin comod here](https://github.com/mjvesa/comod-vaadin) Build it and put the
-resulting file into public as `iframe_bundle.js`. Then you can build the project. It is sufficient to put the files in the public folder
-to some HTTPS capable server. HTTPS is needed for the local file access to work.
+Clonen the repository and performen the usual `npm install` and then `npm run dev`. The contents of the public folder need
+to be served over HTTPS. I use the `live-server`extension for VSCode for this. A Vaadin project with Lit template files
+is needed as well to have something to edit. There is support for Java templates, check the docs for that.
 
 Instructions nicked from rollup docs:
 
