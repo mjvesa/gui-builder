@@ -11,7 +11,7 @@ Follow the author at twitter for the latest updates [@mjvesa](https://twitter.co
 ## How to develop
 
 Clonen the repository and performen the usual `npm install` and then `npm run dev`. The contents of the public folder need
-to be served over HTTPS. I use the `live-server`extension for VSCode for this. A Vaadin project with Lit template files
+to be served over HTTPS. I use the [live server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension for VSCode for this. A Vaadin project with Lit template files
 is needed as well to have something to edit. There is support for Java templates, check the docs for that.
 
 Instructions nicked from rollup docs:
