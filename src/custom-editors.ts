@@ -11,7 +11,7 @@ import { vaadinUtilityClasses } from "./custom-editors/editor/vaadin-utility-cla
 import { sizesEditor } from "./custom-editors/editor/sizes-editor";
 import { fieldEditor } from "./custom-editors/editor/field-editor";
 
-export interface DCAPI {
+export interface ECAPI {
   style: Record<string, string>;
   props: Record<string, string>;
   repaint: () => void;

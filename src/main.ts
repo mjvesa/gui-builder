@@ -81,8 +81,6 @@ let hoverInfo: HoverInfo | undefined;
 let componentStack = [];
 let redoStack = [];
 
-let copiedTree;
-
 let textEditor;
 let htmlEditor;
 let currentMode = "Visual";
@@ -121,7 +119,7 @@ const getEditorTargetDocument = () => {
  * Gets the coordinates of the target on the screen, even if it is in an iframe
  *
  */
-const getBcr = (target:HTMLElement) => {
+const getBcr = (target: HTMLElement) => {
   if (!liveMode) {
     return target.getBoundingClientRect();
   }
@@ -1270,37 +1268,6 @@ const installKeyboardHandlers = () => {
   };
 
   document.body.onkeydown = (event) => {
-    // if (event.key === "c" && event.ctrlKey) {
-    //   copiedTree = Model.copySubtree(selectedElement, currentComponent.tree);
-    //   event.stopPropagation();
-    //   event.preventDefault();
-    // }
-    // if (event.key === "x" && event.ctrlKey) {
-    //   copiedTree = Model.copySubtree(selectedElement, currentComponent.tree);
-    //   const newComponent = {
-    //     ...currentComponent,
-    //     tree: Model.deleteSubtree(selectedElement, currentComponent.tree),
-    //   };
-    //   showNewComponent(newComponent);
-    //   event.stopPropagation();
-    //   event.preventDefault();
-    // }
-    // if (event.key === "v" && event.ctrlKey) {
-    //   if (copiedTree) {
-    //     const newComponent = {
-    //       ...currentComponent,
-    //       tree: Model.insertSubtree(
-    //         selectedElement,
-    //         Model.POSITION_AFTER_ELEMENT,
-    //         copiedTree,
-    //         currentComponent.tree
-    //       ),
-    //     };
-    //     showNewComponent(newComponent);
-    //   }
-    //   event.stopPropagation();
-    //   event.preventDefault();
-    // }
     if (event.key === "z" && event.ctrlKey) {
       if (componentStack.length > 0) {
         redoStack.push(currentComponent);
