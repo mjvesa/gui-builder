@@ -896,7 +896,7 @@ const loadComponent = (componentName) => {
   console.log(`Loading component ${JSON.stringify(state.currentComponent)}`);
   componentStack = [];
   redoStack = [];
-  showstate.currentComponent();
+  showCurrentComponent();
 };
 
 const loadSelectedComponent = () => {
