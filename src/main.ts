@@ -61,7 +61,14 @@ interface Component {
   path: string;
 }
 
-let currentComponent: Component | undefined;
+interface State {
+  currentComponent: Component | undefined;
+}
+
+const state: State = {
+  currentComponent: undefined,
+};
+
 let selectedElement;
 
 let storedComponents = { components: {} };
@@ -158,9 +165,9 @@ const showCurrentComponent = () => {
 let oldOutlineVNode;
 
 const showCurrentComponentImmediately = () => {
-  checkModel(currentComponent.tree);
+  checkModel(state.currentComponent.tree);
   hideMarkers();
-  comodMessage({ command: "render", ...currentComponent });
+  comodMessage({ command: "render", ...state.currentComponent });
   /*const canvas = getEditorTargetElement();
   canvas.innerHTML = "";
   const style = document.createElement("style");
@@ -171,7 +178,7 @@ const showCurrentComponentImmediately = () => {
   modelToDOM(currentComponent.tree, canvas);*/
 
   const outline = getOutlineElement();
-  const vnode = modelToOutline(currentComponent.tree);
+  const vnode = modelToOutline(state.currentComponent.tree);
   if (oldOutlineVNode) {
     patch(oldOutlineVNode, vnode);
   } else {
@@ -192,14 +199,14 @@ const startDragFromModel = (elementId) => {
   console.trace("start drag from model");
   previousBegin = elementId - 1;
   previousEnd = Model.findDanglingParen(
-    currentComponent.tree,
+    state.currentComponent.tree,
     Number(elementId) + 1
   );
 };
 
 const showNewComponent = (newComponent) => {
-  componentStack.push(currentComponent);
-  currentComponent = newComponent;
+  componentStack.push(state.currentComponent);
+  state.currentComponent = newComponent;
   showCurrentComponent();
 };
 
@@ -323,12 +330,12 @@ const dropElementWithData = (hoverInfo: HoverInfo) => {
   if (insertingNewSubtree()) {
     const subtree = dndPayload;
     newComponent = {
-      ...currentComponent,
+      ...state.currentComponent,
       tree: Model.insertSubtree(
         index,
         position,
         subtree,
-        currentComponent.tree
+        state.currentComponent.tree
       ),
     };
   } else {
@@ -337,19 +344,19 @@ const dropElementWithData = (hoverInfo: HoverInfo) => {
       return;
     }
     newComponent = {
-      ...currentComponent,
+      ...state.currentComponent,
       tree: Model.moveSubtree(
         index,
         position,
         previousBegin,
         previousEnd,
-        currentComponent.tree
+        state.currentComponent.tree
       ),
     };
   }
 
-  componentStack.push(currentComponent);
-  currentComponent = newComponent;
+  componentStack.push(state.currentComponent);
+  state.currentComponent = newComponent;
   showCurrentComponent();
 };
 const dropElement = (e) => {
@@ -370,9 +377,13 @@ const updatePropsTable = () => {
   const stack = [];
   let props = "";
   let ip = selectedElement + 1;
-  let value = currentComponent.tree[ip].trim();
-  const tag = currentComponent.tree[ip - 2].trim();
-  while (value !== "(" && value !== ")" && ip < currentComponent.tree.length) {
+  let value = state.currentComponent.tree[ip].trim();
+  const tag = state.currentComponent.tree[ip - 2].trim();
+  while (
+    value !== "(" &&
+    value !== ")" &&
+    ip < state.currentComponent.tree.length
+  ) {
     if (value === "=") {
       const tos = stack.pop();
       const nos = stack.pop();
@@ -383,7 +394,7 @@ const updatePropsTable = () => {
       stack.push(value);
     }
     ip++;
-    value = currentComponent.tree[ip].trim();
+    value = state.currentComponent.tree[ip].trim();
   }
 
   // Add ten lines for new props
@@ -413,11 +424,15 @@ const selectElementWithId = (componentId) => {
   let ip = selectedElement + 1;
   const propsObj: Record<string, string> = {};
   const style: Record<string, string> = {};
-  const tag = currentComponent.tree[ip - 2].trim();
+  const tag = state.currentComponent.tree[ip - 2].trim();
   let props = "";
-  let value = currentComponent.tree[ip].trim();
+  let value = state.currentComponent.tree[ip].trim();
 
-  while (value !== "(" && value !== ")" && ip < currentComponent.tree.length) {
+  while (
+    value !== "(" &&
+    value !== ")" &&
+    ip < state.currentComponent.tree.length
+  ) {
     if (value === "=") {
       const tos = stack.pop();
       const nos = stack.pop();
@@ -440,7 +455,7 @@ const selectElementWithId = (componentId) => {
       stack.push(value);
     }
     ip++;
-    value = currentComponent.tree[ip].trim();
+    value = state.currentComponent.tree[ip].trim();
   }
 
   // Add ten lines for new props
@@ -531,11 +546,11 @@ const updateAttributesFromComponentEditor = (ECAPI) => {
   }
 
   const newComponent = {
-    ...currentComponent,
+    ...state.currentComponent,
     tree: Model.updateSubtreeAttributes(
       propsArr,
       selectedElement,
-      currentComponent.tree
+      state.currentComponent.tree
     ),
   };
   showNewComponent(newComponent);
@@ -568,11 +583,11 @@ const updateAttributes = () => {
   console.log(JSON.stringify(attributes));
 
   const newComponent = {
-    ...currentComponent,
+    ...state.currentComponent,
     tree: Model.updateSubtreeAttributes(
       attributes,
       selectedElement,
-      currentComponent.tree
+      state.currentComponent.tree
     ),
   };
   showNewComponent(newComponent);
@@ -855,14 +870,14 @@ const saveComponent = async () => {
   const componentName = (
     document.getElementById("choose-component") as HTMLInputElement
   ).value;
-  storedComponents.components[componentName] = currentComponent;
+  storedComponents.components[componentName] = state.currentComponent;
 
-  const currentSrc = await getFileAPI().loadFile(currentComponent.path);
+  const currentSrc = await getFileAPI().loadFile(state.currentComponent.path);
   console.log("The current" + currentSrc);
 
   updateComponent(
     currentSrc,
-    currentComponent,
+    state.currentComponent,
     (updatedComponentSrc, updatedComponent) => {
       getFileAPI().saveFile(updatedComponent.path, updatedComponentSrc);
     }
@@ -877,11 +892,11 @@ const saveComponent = async () => {
  */
 const loadComponent = (componentName) => {
   hideMarkers();
-  currentComponent = storedComponents.components[componentName];
-  console.log(`Loading component ${JSON.stringify(currentComponent)}`);
+  state.currentComponent = storedComponents.components[componentName];
+  console.log(`Loading component ${JSON.stringify(state.currentComponent)}`);
   componentStack = [];
   redoStack = [];
-  showCurrentComponent();
+  showstate.currentComponent();
 };
 
 const loadSelectedComponent = () => {
@@ -895,10 +910,10 @@ const switchToSketchMode = () => {
   getPaperElement().style.display = "none";
   $("#xml-editor").style.display = "block";
   enterSketchMode($("#xml-editor"), (component) => {
-    const newTree = currentComponent.tree.slice().concat(component);
+    const newTree = state.currentComponent.tree.slice().concat(component);
     $("#xml-editor").style.display = "none";
     getPaperElement().style.display = "block";
-    showNewComponent({ ...currentComponent, tree: newTree });
+    showNewComponent({ ...state.currentComponent, tree: newTree });
   });
 };
 
@@ -918,8 +933,13 @@ const newComponentFromBean = () => {
   button.onclick = () => {
     const ta = el.shadowRoot.querySelector("#bean-source");
     const crud = generateCrudFromBean(ta.value);
-    currentComponent = { tag: "bean-crud", css: "", tree: crud, path: "" };
-    componentStack.push(currentComponent);
+    state.currentComponent = {
+      tag: "bean-crud",
+      css: "",
+      tree: crud,
+      path: "",
+    };
+    componentStack.push(state.currentComponent);
     showCurrentComponent();
   };
 };
@@ -940,11 +960,11 @@ const toggleXMLMode = () => {
       extraKeys: { "Ctrl-Space": "autocomplete" },
       lineNumbers: true,
     });
-    htmlEditor.getDoc().setValue(ATIRToXML(currentComponent.tree));
+    htmlEditor.getDoc().setValue(ATIRToXML(state.currentComponent.tree));
     htmlEditor.on("change", () => {
       window.requestAnimationFrame(() => {
         const newComponent = {
-          ...currentComponent,
+          ...state.currentComponent,
           tree: XMLToATIR(htmlEditor.getDoc().getValue()),
         };
         showNewComponent(newComponent);
@@ -1045,7 +1065,7 @@ const toggleLiveMode = () => {
           tree
         );
 
-        currentComponent = {
+        state.currentComponent = {
           tag: hoveredEntry.tag,
           tree: patchedTree,
           css: "",
@@ -1130,7 +1150,7 @@ const installUIEventHandlers = () => {
     if (el) {
       const css = textEditor.getValue();
       el.textContent = css;
-      currentComponent.css = css;
+      state.currentComponent.css = css;
     }
   });
 
@@ -1243,7 +1263,7 @@ const installKeyboardHandlers = () => {
     console.log("COPY COPY COPY");
     event.clipboardData.setData(
       "text/plain",
-      ATIRToXML(Model.copySubtree(selectedElement, currentComponent.tree))
+      ATIRToXML(Model.copySubtree(selectedElement, state.currentComponent.tree))
     );
     event.preventDefault();
   };
@@ -1254,12 +1274,12 @@ const installKeyboardHandlers = () => {
     const tree = XMLToATIR(html);
     console.log("Resulting tree: " + JSON.stringify(tree));
     const newComponent = {
-      ...currentComponent,
+      ...state.currentComponent,
       tree: Model.insertSubtree(
         selectedElement,
         Model.POSITION_AFTER_ELEMENT,
         tree,
-        currentComponent.tree
+        state.currentComponent.tree
       ),
     };
     showNewComponent(newComponent);
@@ -1270,8 +1290,8 @@ const installKeyboardHandlers = () => {
   document.body.onkeydown = (event) => {
     if (event.key === "z" && event.ctrlKey) {
       if (componentStack.length > 0) {
-        redoStack.push(currentComponent);
-        currentComponent = componentStack.pop();
+        redoStack.push(state.currentComponent);
+        state.currentComponent = componentStack.pop();
         showCurrentComponent();
       }
       event.stopPropagation();
@@ -1279,8 +1299,8 @@ const installKeyboardHandlers = () => {
     }
     if (event.key === "y" && event.ctrlKey) {
       if (redoStack.length > 0) {
-        componentStack.push(currentComponent);
-        currentComponent = redoStack.pop();
+        componentStack.push(state.currentComponent);
+        state.currentComponent = redoStack.pop();
         showCurrentComponent();
       }
       event.stopPropagation();
@@ -1289,8 +1309,8 @@ const installKeyboardHandlers = () => {
 
     if (event.key === "Delete" && event.ctrlKey) {
       const newComponent = {
-        ...currentComponent,
-        tree: Model.deleteSubtree(selectedElement, currentComponent.tree),
+        ...state.currentComponent,
+        tree: Model.deleteSubtree(selectedElement, state.currentComponent.tree),
       };
       showNewComponent(newComponent);
       event.stopPropagation();
