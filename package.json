@@ -40,6 +40,7 @@
     "@vaadin/vaadin-core": "^24.0.5",
     "codemirror": "^5.56.0",
     "electron": "^22.1.0",
+    "idb-keyval": "^6.2.1",
     "query-selector-shadow-dom": "^1.0.0",
     "snabbdom": "^3.2.0",
     "vanilla-picker": "^2.10.1"

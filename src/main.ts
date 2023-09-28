@@ -7,6 +7,8 @@ import "codemirror/addon/hint/css-hint.js";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/tomorrow-night-eighties.css";
 
+import { get, set } from "idb-keyval";
+
 import { checkModel } from "./check-model";
 import Picker from "vanilla-picker";
 import * as Model from "./model";
@@ -1480,6 +1482,8 @@ const installFileAPI = async () => {
         const componentScanFn = async () => {
           $("#choose-and-save").style.display = "inline";
 
+          let files = [];
+
           const parseDir = async (currentPath, dirHandle) => {
             for await (const [name, handle] of dirHandle.entries()) {
               const fullPath = currentPath + name;
@@ -1492,23 +1496,34 @@ const installFileAPI = async () => {
                 const extension = name.slice(name.lastIndexOf(".") + 1);
                 console.log("extension: " + extension);
                 if (extensions.includes(extension)) {
-                  //const fullPath = dirName + "/" + name;
                   const fullPath = currentPath + name;
-                  const content = await (await handle.getFile()).text();
-                  parseFn({
-                    content,
-                    fileInfo: {
-                      tag: name.replace("." + extension, ""),
-                      css: "",
-                      path: fullPath,
-                      type: extension,
-                    },
-                  });
+                  files.push({ handle, fullPath, extension, name });
                 }
               }
             }
           };
-          parseDir("./", await window.showDirectoryPicker());
+
+          const storedFiles = await get("GUIBFiles");
+          if (storedFiles) {
+            files = storedFiles;
+          } else {
+            await parseDir("./", await window.showDirectoryPicker());
+            set("GUIBFiles", files);
+          }
+
+          for (const file of files) {
+            const content = await (await file.handle.getFile()).text();
+
+            parseFn({
+              content,
+              fileInfo: {
+                tag: file.name.replace("." + file.extension, ""),
+                css: "",
+                path: file.fullPath,
+                type: file.extension,
+              },
+            });
+          }
         };
 
         $("#scan-components").onclick = () => {
